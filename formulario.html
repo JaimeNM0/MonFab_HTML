@@ -4,8 +4,19 @@
         <title>Formulario</title>
     </head>
     <body>
+        <div id="links">
+            <a href="home.html">Home</a>
+            <span>||</span>
+            <a href="formulario.html">Formulario</a>
+            <span>||</span>
+            <a href="tabla.html">Tabla</a>
+            <span>||</span>
+            <a href="enlaces.html">Enlaces</a>
+            <span>||</span>
+            <a href="image.html">Im&aacute;genes</a>
+        </div>
         <h1>Formulario</h1>
-        <form action="formulario.php" method="POST">
+        <form action="" method="POST"><!--action="formulario.php"-->
             <label for="nombre">Nombre del elemento: </label>
             <input name="nombre" type="text">
             <br>
@@ -16,12 +27,17 @@
             <input name="serie" type="text">
             <br>
             <label for="estado">Estado: </label>
-            <input name="estado" type="checkbox">
+            <input name="estado" type="checkbox" value="activo">
             <br>
             <label for="prioridad">Prioridad: </label>
-            <input name="prioridad" type="radio">
+            <input name="prioridad" type="radio" value="alta"> Alta
+            <input name="prioridad" type="radio" value="media"> Media
+            <input name="prioridad" type="radio" value="baja"> Baja
+            <br>
             <br>
             <button type="submit">Enviar</button>
+            <button type="submit">Limpiar</button>
+            <button type="submit">Cancelar</button>
         </form>
     </body>
 </html>
