@@ -4,7 +4,7 @@
         <title>Formulario</title>
     </head>
     <body>
-        <div id="links">
+        <header>
             <a href="home.html">Home</a>
             <span>||</span>
             <a href="formulario.html">Formulario</a>
@@ -14,30 +14,33 @@
             <a href="enlaces.html">Enlaces</a>
             <span>||</span>
             <a href="image.html">Im&aacute;genes</a>
-        </div>
-        <h1>Formulario</h1>
-        <form action="" method="POST"><!--action="formulario.php"-->
-            <label for="nombre">Nombre del elemento: </label>
-            <input name="nombre" type="text">
-            <br>
-            <label for="descripcion">Descripci&oacute;n del elemento: </label>
-            <input name="descripcion" type="text">
-            <br>
-            <label for="serie">N&uacute;mero de serie del elemento: </label>
-            <input name="serie" type="text">
-            <br>
-            <label for="estado">Estado: </label>
-            <input name="estado" type="checkbox" value="activo">
-            <br>
-            <label for="prioridad">Prioridad: </label>
-            <input name="prioridad" type="radio" value="alta"> Alta
-            <input name="prioridad" type="radio" value="media"> Media
-            <input name="prioridad" type="radio" value="baja"> Baja
-            <br>
-            <br>
-            <button type="submit">Enviar</button>
-            <button type="submit">Limpiar</button>
-            <button type="submit">Cancelar</button>
-        </form>
+        </header>
+        <main>
+            <h1>Formulario</h1>
+            <form action="" method="POST"><!--action="formulario.php"-->
+                <label for="nombre">Nombre del elemento: </label>
+                <input name="nombre" type="text">
+                <br>
+                <label for="descripcion">Descripci&oacute;n del elemento: </label>
+                <input name="descripcion" type="text">
+                <br>
+                <label for="serie">N&uacute;mero de serie del elemento: </label>
+                <input name="serie" type="text">
+                <br>
+                <label for="estado">Estado: </label>
+                <input name="estado" type="checkbox" value="activo">
+                <br>
+                <label for="prioridad">Prioridad: </label>
+                <input name="prioridad" type="radio" value="alta"> Alta
+                <input name="prioridad" type="radio" value="media"> Media
+                <input name="prioridad" type="radio" value="baja"> Baja
+                <br>
+                <br>
+                <button type="submit">Enviar</button>
+                <button type="submit">Limpiar</button>
+                <button type="submit">Cancelar</button>
+            </form>
+
+        </main>
     </body>
 </html>
