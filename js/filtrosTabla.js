@@ -59,44 +59,64 @@ const informacion = [
 
 window.onload = function () {
     const tabla = document.getElementById("tabla");
+    const filtrar = document.getElementById("filtrar");
 
-    informacion.forEach(function (element) {
-        const nuevoFila = document.createElement("tr");
+    function actualizarTabla(filtros) {
+        tabla.innerHTML = "";
+        const informacionFiltrada = informacion.filter(function (element) {
+            return (element.nombre.toLowerCase().startsWith(filtros.toLowerCase()) || element.descripcion.toLowerCase().startsWith(filtros.toLowerCase()));
+        });
 
-        const celdaAccion = document.createElement("td");
-        const boton = document.createElement("input");
-        boton.type = "button";
-        boton.value = "X";
+        informacionFiltrada.forEach(function (element) {
+            const nuevoFila = document.createElement("tr");
 
-        boton.onclick = function(event) {
-            event.target.parentElement.parentElement.remove();
-        };
+            const celdaAccion = document.createElement("td");
+            const boton = document.createElement("input");
+            boton.type = "button";
+            boton.value = "X";
 
-        celdaAccion.appendChild(boton);
+            boton.onclick = function (event) {
+                event.target.parentElement.parentElement.remove();
+            };
 
-        const celdaNombre = document.createElement("td");
-        celdaNombre.textContent = element.nombre;
+            celdaAccion.appendChild(boton);
 
-        const celdaDescripcion = document.createElement("td");
-        celdaDescripcion.textContent = element.descripcion;
+            const celdaNombre = document.createElement("td");
+            celdaNombre.textContent = element.nombre;
 
-        const celdaNumeroSerie = document.createElement("td");
-        celdaNumeroSerie.textContent = element.numeroSerie;
+            const celdaDescripcion = document.createElement("td");
+            celdaDescripcion.textContent = element.descripcion;
 
-        const celdaEstado = document.createElement("td");
-        celdaEstado.textContent = element.estado;
+            const celdaNumeroSerie = document.createElement("td");
+            celdaNumeroSerie.textContent = element.numeroSerie;
 
-        const celdaPrioridad = document.createElement("td");
-        celdaPrioridad.textContent = element.prioridad;
+            const celdaEstado = document.createElement("td");
+            celdaEstado.textContent = element.estado;
 
-        nuevoFila.appendChild(celdaAccion);
-        nuevoFila.appendChild(celdaNombre);
-        nuevoFila.appendChild(celdaDescripcion);
-        nuevoFila.appendChild(celdaNumeroSerie);
-        nuevoFila.appendChild(celdaEstado);
-        nuevoFila.appendChild(celdaPrioridad);
+            const celdaPrioridad = document.createElement("td");
+            celdaPrioridad.textContent = element.prioridad;
 
-        tabla.appendChild(nuevoFila);
+            nuevoFila.appendChild(celdaAccion);
+            nuevoFila.appendChild(celdaNombre);
+            nuevoFila.appendChild(celdaDescripcion);
+            nuevoFila.appendChild(celdaNumeroSerie);
+            nuevoFila.appendChild(celdaEstado);
+            nuevoFila.appendChild(celdaPrioridad);
+
+            tabla.appendChild(nuevoFila);
+        });
+    }
+
+    filtrar.addEventListener("input", function () {
+        const textoBuscado = filtrar.value;
+
+        if (textoBuscado.length >= 3) {
+            actualizarTabla(textoBuscado);
+        } else {
+            actualizarTabla("");
+        }
     });
 
-}
+    actualizarTabla("");
+
+};
