@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Tabla</title>
+    <script type="text/javascript" src="./js/filtrosTabla.js"></script>
 </head>
 <body>
     <header>
@@ -18,19 +19,25 @@
     </header>
     <main>
         <h1>Tabla</h1>
+        <form>
+            <label for="filtrar">Buscar:</label>
+            <input type="text" id="filtrar" name="filtrar" placeholder="Filtros" />
+        </form>
+        <br>
         <table align="center" border="2">
             <thead>
                 <tr>
+                    <th>Acción</th>
                     <th>Nombre del elemento</th>
                     <th>Descripción del elemento</th>
                     <th>Número de serie del elemento</th>
                     <th>Estado</th>
                     <th>Prioridad</th>
-                    <th>Fecha de creación</th>
                 </tr>
             </thead>
-            <tbody align="center">
-                <tr>
+            <tbody id="tabla" align="center">
+                <!--<tr>
+                    <td></td>
                     <td>Reciclado de botellas</td>
                     <td>
                         Hay muchas variaciones de los pasajes de Lorem Ipsum disponibles, pero la mayoría sufrió.
@@ -38,9 +45,9 @@
                     <td>r5c7AEZ c67w6rg xeBssyV Ka8PVJ2</td>
                     <td>Activo</td>
                     <td>Alta</td>
-                    <td>10/09/2023</td>
                 </tr>
                 <tr>
+                    <td></td>
                     <td>Creación de botellas</td>
                     <td>
                         Hay muchas variaciones de los pasajes de Lorem Ipsum disponibles, pero la mayoría sufrió.
@@ -48,19 +55,19 @@
                     <td>mQ2f7wm 2cPG68X wkaRXbj RWrX3nF</td>
                     <td>Activo</td>
                     <td>Baja</td>
-                    <td>12/09/2023</td>
                 </tr>
                 <tr>
-                    <td>Dise&ntilde;ado de botellas</td>
+                    <td></td>
+                    <td>Diseñado de botellas</td>
                     <td>
                         Hay muchas variaciones de los pasajes de Lorem Ipsum disponibles, pero la mayoría sufrió.
                     </td>
                     <td>3iiMRez fXr9en9 CG2X6ta gBmBuQU</td>
                     <td>Activo</td>
                     <td>Media</td>
-                    <td>16/09/2023</td>
                 </tr>
                 <tr>
+                    <td></td>
                     <td>Modificación de botellas</td>
                     <td>
                         Hay muchas variaciones de los pasajes de Lorem Ipsum disponibles, pero la mayoría sufrió.
@@ -68,8 +75,7 @@
                     <td>MZyBDPg ijEmtzs dxjKBh3 v92eM7J</td>
                     <td>Inactivo</td>
                     <td>Baja</td>
-                    <td>23/09/2023</td>
-                </tr>
+                </tr>-->
             </tbody>
         </table>
     </main>
