@@ -67,6 +67,11 @@ window.onload = function () {
         const boton = document.createElement("input");
         boton.type = "button";
         boton.value = "X";
+
+        boton.onclick = function(event) {
+            event.target.parentElement.parentElement.remove();
+        };
+
         celdaAccion.appendChild(boton);
 
         const celdaNombre = document.createElement("td");
