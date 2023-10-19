@@ -57,66 +57,61 @@ const informacion = [
     }
 ];
 
+let informacionNoBorrada = informacion;
+
 window.onload = function () {
-    const tabla = document.getElementById("tabla");
     const filtrar = document.getElementById("filtrar");
-
-    function actualizarTabla(filtros) {
-        tabla.innerHTML = "";
-        const informacionFiltrada = informacion.filter(function (element) {
-            return (element.nombre.toLowerCase().startsWith(filtros.toLowerCase()) || element.descripcion.toLowerCase().startsWith(filtros.toLowerCase()));
-        });
-
-        informacionFiltrada.forEach(function (element) {
-            const nuevoFila = document.createElement("tr");
-
-            const celdaAccion = document.createElement("td");
-            const boton = document.createElement("input");
-            boton.type = "button";
-            boton.value = "X";
-
-            boton.onclick = function (event) {
-                event.target.parentElement.parentElement.remove();
-            };
-
-            celdaAccion.appendChild(boton);
-
-            const celdaNombre = document.createElement("td");
-            celdaNombre.textContent = element.nombre;
-
-            const celdaDescripcion = document.createElement("td");
-            celdaDescripcion.textContent = element.descripcion;
-
-            const celdaNumeroSerie = document.createElement("td");
-            celdaNumeroSerie.textContent = element.numeroSerie;
-
-            const celdaEstado = document.createElement("td");
-            celdaEstado.textContent = element.estado;
-
-            const celdaPrioridad = document.createElement("td");
-            celdaPrioridad.textContent = element.prioridad;
-
-            nuevoFila.appendChild(celdaAccion);
-            nuevoFila.appendChild(celdaNombre);
-            nuevoFila.appendChild(celdaDescripcion);
-            nuevoFila.appendChild(celdaNumeroSerie);
-            nuevoFila.appendChild(celdaEstado);
-            nuevoFila.appendChild(celdaPrioridad);
-
-            tabla.appendChild(nuevoFila);
-        });
-    }
+    filtrar.value = "";
 
     filtrar.addEventListener("input", function () {
         const textoBuscado = filtrar.value;
 
-        if (textoBuscado.length >= 3) {
-            actualizarTabla(textoBuscado);
-        } else {
-            actualizarTabla("");
-        }
+        textoBuscado.length >= 3 ? actualizarTabla(textoBuscado) : actualizarTabla("");
     });
 
     actualizarTabla("");
-
 };
+
+function actualizarTabla(filtros) {
+    const tabla = document.getElementById("tabla");
+    tabla.innerHTML = "";
+
+    const informacionFiltrada = informacionNoBorrada.filter(function (element) {
+
+        return (element.nombre.toLowerCase().indexOf(filtros.toLowerCase()) != -1 ||
+            element.descripcion.toLowerCase().indexOf(filtros.toLowerCase()) != -1 ? true : false);
+    });
+
+    informacionFiltrada.forEach(function (element) {
+        const nuevoFila = document.createElement("tr");
+
+        const celdaAccion = document.createElement("td");
+        const boton = document.createElement("input");
+        boton.type = "button";
+        boton.value = "X";
+
+        boton.onclick = function (event) {
+            event.target.parentElement.parentElement.remove();
+            borrarInformacion(element);
+        };
+
+        celdaAccion.appendChild(boton);
+        nuevoFila.appendChild(celdaAccion);
+
+        let claves = Object.keys(element);
+        for (let i = 0; i <= claves.length; i++) {
+            const celda = document.createElement("td");
+            celda.textContent = element[claves[i]];
+            nuevoFila.appendChild(celda);
+        }
+
+        tabla.appendChild(nuevoFila);
+    });
+}
+
+function borrarInformacion(borrar) {
+    informacionNoBorrada = informacionNoBorrada.filter(function (element) {
+        console.log(element);
+        return (!(element == borrar));
+    });
+}
