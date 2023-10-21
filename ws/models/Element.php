@@ -1,6 +1,6 @@
 <?php
 
-require_once "../interfaces/IToJson.php";
+require_once "./interfaces/IToJson.php";
 
 class Element implements IToJson {
     private $nombre;
