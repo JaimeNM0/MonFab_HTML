@@ -1,0 +1,8 @@
+Id;Nombre;Descripción;Número de series;Estado;Prioridad
+\==============================================================================================/
+0;Reciclado de botellas;Hay muchas variaciones de los pasajes de Lorem Ipsum disponibles, pero la mayoría sufrió.;r5c7AEZ c67w6rg xeBssyV Ka8PVJ2;Activo;Alta
+1;Creación de botellas;Hay pocas variaciones de los pasajes de Lorem Ipsum disponibles, pero la mayoría sufrió.;mQ2f7wm 2cPG68X wkaRXbj RWrX3nF;Activo;Baja
+2;Diseñado de botellas;Creación de las variaciones de los pasajes de Lorem Ipsum disponibles, pero la mayoría sufrió.;3iiMRez fXr9en9 CG2X6ta gBmBuQU;Activo;Media
+3;Reciclar las botellas;Reciclado las variaciones de los pasajes de Lorem Ipsum disponibles, pero la mayoría sufrió.;QJBiofS 4o6Vs1f l4kJmSN mCVFBA8;Activo;Alta
+4;Diseñar las botellas;Modificación de las variaciones de los pasajes de Lorem Ipsum disponibles, pero la mayoría sufrió.;F1RYijI eD7hNHV 8600ohx 7wIgdfp;Activo;Media
+5;Modificación de botellas;Hay menos variaciones de los pasajes de Lorem Ipsum disponibles, pero la mayoría sufrió.;MZyBDPg ijEmtzs dxjKBh3 v92eM7J;Inactivo;Baja
