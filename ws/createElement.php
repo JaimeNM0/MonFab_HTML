@@ -6,8 +6,8 @@
  * __DIR__
  */
 
-require_once "./models/Element.php";
-require_once "./interfaces/IToJson.php";
+require_once __DIR__ . "/models/Element.php";
+//require_once "./interfaces/IToJson.php";
 
 $nombre = !empty($_POST["nombre"]) ? $_POST["nombre"] : "";
 $descripcion = !empty($_POST["descripcion"]) ? $_POST["descripcion"] : "";

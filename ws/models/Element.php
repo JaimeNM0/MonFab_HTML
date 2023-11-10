@@ -1,15 +1,17 @@
 <?php
 
-require_once "./interfaces/IToJson.php";
+require_once __DIR__ . "/../interfaces/IToJson.php";
 
-class Element implements IToJson {
+class Element implements IToJson
+{
     private $nombre;
     private $descripcion;
     private $numeroSerie;
     private $estado;
     private $prioridad;
 
-    public function __construct($nombre, $descripcion, $numeroSerie, $estado, $prioridad) {
+    public function __construct($nombre, $descripcion, $numeroSerie, $estado, $prioridad)
+    {
         $this->nombre = $nombre;
         $this->descripcion = $descripcion;
         $this->numeroSerie = $numeroSerie;
@@ -17,38 +19,49 @@ class Element implements IToJson {
         $this->prioridad = $prioridad;
     }
 
-    public function getNombre() {
+    public function getNombre()
+    {
         return $this->nombre;
     }
-    public function setNombre($nombre) {
+    public function setNombre($nombre)
+    {
         $this->nombre = $nombre;
     }
-    public function getDescripcion() {
+    public function getDescripcion()
+    {
         return $this->descripcion;
     }
-    public function setDescripcion($descripcion) {
+    public function setDescripcion($descripcion)
+    {
         $this->descripcion = $descripcion;
     }
-    public function getNumeroSerie() {
+    public function getNumeroSerie()
+    {
         return $this->numeroSerie;
     }
-    public function setNumeroSerie($numeroSerie) {
+    public function setNumeroSerie($numeroSerie)
+    {
         $this->numeroSerie = $numeroSerie;
     }
-    public function getEstado() {
+    public function getEstado()
+    {
         return $this->estado;
     }
-    public function setEstado($estado) {
+    public function setEstado($estado)
+    {
         $this->estado = $estado;
     }
-    public function getPrioridad() {
+    public function getPrioridad()
+    {
         return $this->prioridad;
     }
-    public function setPrioridad($prioridad) {
+    public function setPrioridad($prioridad)
+    {
         $this->prioridad = $prioridad;
     }
 
-    public function toJson() {
+    public function toJson()
+    {
         $json = [
             "nombre" => $this->getNombre(),
             "descripcion" => $this->getDescripcion(),
