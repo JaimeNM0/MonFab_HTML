@@ -6,55 +6,54 @@ require_once __DIR__ . "/../inc/DBConnection.php";
 
 $id = !empty($_GET["id"]) ? $_GET["id"] : "";
 
-$success = true;
-$message = "Tu petición a funcionado, yuju.";
+$success = false;
+$message = "ERROR";
 $data = [];
 
 if ($_SERVER["REQUEST_METHOD"] !== "GET") {
-    echo "Envialo por GET, por favor.";
-    return "";
+    enviarResultado($data, $success, "Envialo por GET, por favor.");
+    return;
 }
 
 $connection = new DBConnection();
 
 if (empty($id)) {
     try {
-        $sql = "select * from elementos";
+        $sql = "SELECT * FROM elementos";
         $sentencia = $connection->getPdo()->prepare($sql);
         $sentencia->execute();
         $data = $sentencia->fetchAll(PDO::FETCH_ASSOC);
     } catch (PDOException $e) {
-        $success = false;
-        $message = $e->getMessage();
+        enviarResultado($data, $success, $e->getMessage());
+        return;
     }
 
-    $resultado = maquetarResultado($data, $success, $message);
-
-    echo json_encode($resultado, JSON_PRETTY_PRINT);
-    return "";
+    enviarResultado($data, true, "Se ha podido enviar todos los registro.");
+    return;
 }
 
 try {
-    $sql = "select * from elementos where id=:datos";
+    $sql = "SELECT * FROM elementos WHERE id=:id";
     $sentencia = $connection->getPdo()->prepare($sql);
-    $sentencia->execute(array(':datos' => $id));
+    $values = [
+        ":id" => $id
+    ];
+    $sentencia->execute($values);
     $data = $sentencia->fetchAll(PDO::FETCH_ASSOC);
 } catch (PDOException $e) {
-    $success = false;
-    $message = $e->getMessage();
+    enviarResultado($data, $success, $e->getMessage());
+    return;
 }
 
-if ($data === [] && $message === "Tu petición a funcionado, yuju.") {
-    $success = false;
-    $message = "Ese registro no existe.";
+if ($data === [] && $message === "ERROR") {
+    enviarResultado($data, $success, "Ese registro no existe.");
+    return;
 }
 
-$resultado = maquetarResultado($data, $success, $message);
+enviarResultado($data, true, "Se ha podido encontrar ese registro.");
+return;
 
-echo json_encode($resultado, JSON_PRETTY_PRINT);
-return "";
-
-function maquetarResultado($data, $success, $message)
+function enviarResultado($data, $success, $message)
 {
     $resultado = [
         "success" => $success,
@@ -62,5 +61,5 @@ function maquetarResultado($data, $success, $message)
         "data" => $data
     ];
 
-    return $resultado;
+    echo json_encode($resultado, JSON_PRETTY_PRINT);
 }

@@ -6,59 +6,56 @@ require_once __DIR__ . "/../inc/DBConnection.php";
 
 $id = !empty($_GET["id"]) ? $_GET["id"] : "";
 
-$success = true;
-$message = "Tu petición a funcionado, yuju.";
+$success = false;
+$message = "ERROR";
 $data = [];
 
 if ($_SERVER["REQUEST_METHOD"] !== "GET") {
-    echo "Envialo por GET, por favor.";
-    return "";
+    enviarResultado($data, $success, "Envialo por GET, por favor.");
+    return;
 }
 
 if (empty($id)) {
-    echo "Tienes que enviar un id, por favor.";
-    return "";
+    enviarResultado($data, $success, "Tienes que enviar un id, por favor.");
+    return;
 }
 
 $connection = new DBConnection();
 
 try {
-    $sql = "select * from elementos where id=:datos";
+    $sql = "SELECT * FROM elementos WHERE id=:id";
     $sentencia = $connection->getPdo()->prepare($sql);
-    $sentencia->execute(array(':datos' => $id));
+    $values = [
+        ":id" => $id
+    ];
+    $sentencia->execute($values);
     $data = $sentencia->fetchAll(PDO::FETCH_ASSOC);
 } catch (PDOException $e) {
-    $success = false;
-    $message = $e->getMessage();
+    enviarResultado($data, $success, $e->getMessage());
+    return;
 }
 
-if ($data === [] && $message === "Tu petición a funcionado, yuju.") {
-    $success = false;
-    $message = "Ese registro no existe, entonces, no lo he podido borrar.";
-
-    $resultado = maquetarResultado($data, $success, $message);
-
-    echo json_encode($resultado, JSON_PRETTY_PRINT);
-    return "";
+if ($data === [] && $message === "ERROR") {
+    enviarResultado($data, $success, "Ese registro no existe, entonces, no lo he podido borrar.");
+    return;
 }
 
 try {
-    $sql = "delete from elementos where id=:datos";
+    $sql = "DELETE FROM elementos WHERE id=:id";
     $sentencia = $connection->getPdo()->prepare($sql);
-    $sentencia->execute(array(':datos' => $id));
-    //$data = $sentencia->fetchAll(PDO::FETCH_ASSOC);
-    $message = "He podido borrar el registro " . $id . ".";
+    $values = [
+        ":id" => $id
+    ];
+    $sentencia->execute($values);
 } catch (PDOException $e) {
-    $success = false;
-    $message = $e->getMessage();
+    enviarResultado($data, $success, $e->getMessage());
+    return;
 }
 
-$resultado = maquetarResultado($data, $success, $message);
+enviarResultado($data, true, "He podido borrar el registro " . $id . ".");
+return;
 
-echo json_encode($resultado, JSON_PRETTY_PRINT);
-return "";
-
-function maquetarResultado($data, $success, $message)
+function enviarResultado($data, $success, $message)
 {
     $resultado = [
         "success" => $success,
@@ -66,5 +63,5 @@ function maquetarResultado($data, $success, $message)
         "data" => $data
     ];
 
-    return $resultado;
+    echo json_encode($resultado, JSON_PRETTY_PRINT);
 }
