@@ -62,7 +62,7 @@ try {
     return;
 }
 
-if ($data === [] && $message === "ERROR") {
+if ($data === []) {
     enviarResultado($data, $success, "Ha habido un error al insertar.");
     return;
 }

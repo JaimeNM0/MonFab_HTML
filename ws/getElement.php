@@ -11,7 +11,7 @@ $message = "ERROR";
 $data = [];
 
 if ($_SERVER["REQUEST_METHOD"] !== "GET") {
-    enviarResultado($data, $success, "Envialo por GET, por favor.");
+    enviarResultado($data, $success, "Envíalo por GET, por favor.");
     return;
 }
 
@@ -28,7 +28,7 @@ if (empty($id)) {
         return;
     }
 
-    enviarResultado($data, true, "Se ha podido enviar todos los registro.");
+    enviarResultado($data, true, "Se ha podido enviar todos los registros.");
     return;
 }
 
@@ -45,7 +45,7 @@ try {
     return;
 }
 
-if ($data === [] && $message === "ERROR") {
+if ($data === []) {
     enviarResultado($data, $success, "Ese registro no existe.");
     return;
 }
