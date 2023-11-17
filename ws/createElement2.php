@@ -2,6 +2,7 @@
 header('Content-Type: application/json');
 
 require_once __DIR__ . "/models/Element.php";
+require_once __DIR__ . "/others/Function.php";
 require_once __DIR__ . "/../inc/DBConnection.php";
 
 $nombre = !empty($_POST["nombre"]) ? $_POST["nombre"] : null;
@@ -19,15 +20,12 @@ if (empty($nombre) || empty($descripcion) || empty($nserie)) {
     return;
 }
 
-$nserie = strtoupper($nserie);
-
-$estado = strtolower($estado);
-$estado = substr_replace($estado, strtoupper(substr($estado, 0, 1)), 0, 1);
-
-$prioridad = strtolower($prioridad);
-$prioridad = substr_replace($prioridad, strtoupper(substr($prioridad, 0, 1)), 0, 1);
-
+$element = new Element(null, null, null, null, null);
 $connection = new DBConnection();
+
+$nserie = $element->UpperLettersFormat($nserie);
+$estado = $element->firstUpperLetterFormat($estado);
+$prioridad = $element->firstUpperLetterFormat($prioridad);
 
 try {
     $sql = "INSERT INTO elementos VALUES (null, :nombre, :descripcion, :nserie, :estado, :prioridad)";
@@ -46,41 +44,18 @@ try {
 }
 
 try {
-    $sql = "SELECT * FROM elementos WHERE nombre=:nombre AND descripcion=:descripcion AND nserie=:nserie AND estado=:estado AND prioridad=:prioridad";
+    $sql = "SELECT * FROM elementos ORDER BY id DESC LIMIT 1;";
     $sentencia = $connection->getPdo()->prepare($sql);
-    $values = [
-        ":nombre" => $nombre,
-        ":descripcion" => $descripcion,
-        ":nserie" => $nserie,
-        ":estado" => $estado,
-        ":prioridad" => $prioridad
-    ];
-    $sentencia->execute($values);
+    $sentencia->execute();
     $data = $sentencia->fetchAll(PDO::FETCH_ASSOC);
 } catch (PDOException $e) {
     enviarResultado($data, $success, $e->getMessage());
     return;
 }
 
-if ($data === []) {
-    enviarResultado($data, $success, "Ha habido un error al insertar.");
+if (!validateRecordExists($data, $success, "Ha habido un error al insertar.")) {
     return;
-}
-
-if (count($data) > 1) {
-    $data = $data[count($data) - 1];
 }
 
 enviarResultado($data, true, "Se ha podido insertar correctamente.");
 return;
-
-function enviarResultado($data, $success, $message)
-{
-    $resultado = [
-        "success" => $success,
-        "message" => $message,
-        "data" => $data
-    ];
-
-    echo json_encode($resultado, JSON_PRETTY_PRINT);
-}

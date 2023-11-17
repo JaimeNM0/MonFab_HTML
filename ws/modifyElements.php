@@ -2,9 +2,10 @@
 header('Content-Type: application/json');
 
 require_once __DIR__ . "/models/Element.php";
+require_once __DIR__ . "/others/Function.php";
 require_once __DIR__ . "/../inc/DBConnection.php";
 
-$id = !empty($_GET["id"]) ? $_GET["id"] : "";
+$id = !empty($_GET["id"]) ? $_GET["id"] : null;
 $nombre = !empty($_POST["nombre"]) ? $_POST["nombre"] : null;
 $descripcion = !empty($_POST["descripcion"]) ? $_POST["descripcion"] : null;
 $nserie = !empty($_POST["nserie"]) ? $_POST["nserie"] : null;
@@ -15,105 +16,65 @@ $success = false;
 $message = "ERROR";
 $data = [];
 
-if (empty($id)) {
-    enviarResultado($data, $success, "Tienes que enviar un id, por favor.");
+if (!validateSentId($id, $data, $success)) {
     return;
+}
+
+$element = new Element(null, null, null, null, null);
+$connection = new DBConnection();
+
+$nserie = $element->UpperLettersFormat($nserie);
+$estado = $element->firstUpperLetterFormat($estado);
+$prioridad = $element->firstUpperLetterFormat($prioridad);
+
+$data = $element->queryOneRecord($success, $connection, $id);
+
+if (!validateRecordExists($data, $success, "Ese registro no existe.")) {
+    return;
+}
+
+$sql = "UPDATE elementos SET";
+$sql_set = "";
+$sql_where = " WHERE id=:id";
+
+$values = [":id" => $id];
+
+if (!empty($nombre)) {
+    $sql_set .= " nombre = :nombre,";
+    $values[":nombre"] = $nombre;
+}
+
+if (!empty($descripcion)) {
+    $sql_set .= " descripcion = :descripcion,";
+    $values[":descripcion"] = $descripcion;
 }
 
 if (!empty($nserie)) {
-    $nserie = strtoupper($nserie);
+    $sql_set .= " nserie = :nserie,";
+    $values[":nserie"] = $nserie;
 }
 
 if (!empty($estado)) {
-    $estado = strtolower($estado);
-    $estado = substr_replace($estado, strtoupper(substr($estado, 0, 1)), 0, 1);
+    $sql_set .= " estado = :estado,";
+    $values[":estado"] = $estado;
 }
 
 if (!empty($prioridad)) {
-    $prioridad = strtolower($prioridad);
-    $prioridad = substr_replace($prioridad, strtoupper(substr($prioridad, 0, 1)), 0, 1);
+    $sql_set .= " prioridad = :prioridad,";
+    $values[":prioridad"] = $prioridad;
 }
 
-$connection = new DBConnection();
+$sql_set = substr($sql_set, 0, strlen($sql_set) - 1);
 
 try {
-    $sql = "SELECT * FROM elementos WHERE id=:id";
-    $sentencia = $connection->getPdo()->prepare($sql);
-    $values = [
-        ":id" => $id
-    ];
-    $sentencia->execute($values);
-    $data = $sentencia->fetchAll(PDO::FETCH_ASSOC);
-} catch (PDOException $e) {
-    enviarResultado($data, $success, $e->getMessage());
-    return;
-}
-
-if ($data === []) {
-    enviarResultado($data, $success, "Ese registro no existe.");
-    return;
-}
-
-if (empty($nombre)) {
-    $nombre = $data[0]["nombre"];
-}
-
-if (empty($descripcion)) {
-    $descripcion = $data[0]["descripcion"];
-}
-
-if (empty($nserie)) {
-    $nserie = $data[0]["nserie"];
-}
-
-if (empty($estado)) {
-    $estado = $data[0]["estado"];
-}
-
-if (empty($prioridad)) {
-    $prioridad = $data[0]["prioridad"];
-}
-
-try {
-    $sql = "UPDATE elementos SET nombre=:nombre, descripcion=:descripcion, nserie=:nserie, estado=:estado, prioridad=:prioridad WHERE id=:id";
-    $sentencia = $connection->getPdo()->prepare($sql);
-    $values = [
-        ":nombre" => $nombre,
-        ":descripcion" => $descripcion,
-        ":nserie" => $nserie,
-        ":estado" => $estado,
-        ":prioridad" => $prioridad,
-        ":id" => $id
-    ];
+    $sentencia = $connection->getPdo()->prepare($sql . $sql_set . $sql_where);
     $sentencia->execute($values);
 } catch (PDOException $e) {
     enviarResultado($data, $success, $e->getMessage());
     return;
 }
 
-try {
-    $sql = "SELECT * FROM elementos WHERE id=:id";
-    $sentencia = $connection->getPdo()->prepare($sql);
-    $values = [
-        ":id" => $id
-    ];
-    $sentencia->execute($values);
-    $data = $sentencia->fetchAll(PDO::FETCH_ASSOC);
-} catch (PDOException $e) {
-    enviarResultado($data, $success, $e->getMessage());
-    return;
-}
+$data = $element->queryOneRecord($success, $connection, $id);
 
 enviarResultado($data, true, "Se ha podido modificar correctamente.");
 return;
-
-function enviarResultado($data, $success, $message)
-{
-    $resultado = [
-        "success" => $success,
-        "message" => $message,
-        "data" => $data
-    ];
-
-    echo json_encode($resultado, JSON_PRETTY_PRINT);
-}

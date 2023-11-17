@@ -1,6 +1,7 @@
 <?php
 
 require_once __DIR__ . "/../interfaces/IToJson.php";
+require_once __DIR__ . "/../others/Function.php";
 
 class Element implements IToJson
 {
@@ -70,5 +71,53 @@ class Element implements IToJson
             "prioridad" => $this->getPrioridad()
         ];
         return json_encode($json);
+    }
+
+    public function UpperLettersFormat($nserie)
+    {
+        $nserie = strtoupper($nserie);
+
+        return $nserie;
+    }
+
+    public function firstUpperLetterFormat($word)
+    {
+        $word = strtolower($word);
+        $word = substr_replace($word, strtoupper(substr($word, 0, 1)), 0, 1);
+
+        return $word;
+    }
+
+    public function queryAllRecords($success, $connection)
+    {
+        try {
+            $sql = "SELECT * FROM elementos";
+            $sentencia = $connection->getPdo()->prepare($sql);
+            $sentencia->execute();
+            $data = $sentencia->fetchAll(PDO::FETCH_ASSOC);
+        } catch (PDOException $e) {
+            enviarResultado($data, $success, $e->getMessage());
+            return;
+        }
+
+        return $data;
+    }
+
+    public function queryOneRecord($success, $connection, $id)
+    {
+        try {
+            $sql = "SELECT * FROM elementos WHERE id=:id";
+            $sentencia = $connection->getPdo()->prepare($sql);
+            $values = [
+                ":id" => $id
+            ];
+            $sentencia->execute($values);
+            $data = $sentencia->fetchAll(PDO::FETCH_ASSOC);
+        } catch (PDOException $e) {
+            enviarResultado($data, $success, $e->getMessage());
+            return;
+        }
+
+        return $data;
     }
 }
