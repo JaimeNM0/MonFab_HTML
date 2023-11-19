@@ -59,7 +59,7 @@ const informacion = [
 
 let informacionNoBorrada = informacion;
 
-window.onload = function () {
+window.addEventListener('load', function () {
     const filtrar = document.getElementById("filtrar");
     filtrar.value = "";
 
@@ -70,7 +70,11 @@ window.onload = function () {
     });
 
     actualizarTabla("");
-};
+});
+
+/*window.onload = function () {
+    
+};*/
 
 function actualizarTabla(filtros) {
     const tabla = document.getElementById("tabla");
