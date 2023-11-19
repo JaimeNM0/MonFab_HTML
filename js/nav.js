@@ -1,27 +1,31 @@
 window.addEventListener("load", function () {
-    console.log("Holas");
     const navbar = document.getElementById("navbar");
-    let url = "./nav.html";
+    let url = "./htmlPartes/nav.html";
     fetch(url)
         .then((response) => response.text())
-        .then(function (response) {
-            navbar.innerHTML = response;
-            remarcarArchivo();
+        .then(function (text) {
+            navbar.innerHTML = text;
+            oirSonido();
+            remarcarArchivoActual();
         })
         .catch(function (error) {
             console.log("Hubo un problema con la petición Fetch:" + error.message);
         });
 });
 
-const remarcarArchivo = () => {
-    var rutaActual = window.location.pathname;
-    var archivoActual = rutaActual.slice(rutaActual.lastIndexOf("/") + 1, rutaActual.indexOf("html") + 4);
-    var enlaces = document.querySelectorAll("#listaNav a");
+function remarcarArchivoActual() {
+    let rutaActual = window.location.pathname;
+    let archivoActual = rutaActual.slice(rutaActual.lastIndexOf("/") + 1, rutaActual.indexOf("html") + 4);
+    let enlaces = document.querySelectorAll("#listaNav a");
 
     enlaces.forEach(function (enlace) {
-        var archivoEnlace = enlace.getAttribute("href");
-        if (archivoActual === archivoEnlace) {
-            enlace.style.background = "#04aa6d";
-        }
+        let archivoEnlace = enlace.getAttribute("href");
+        archivoActual === archivoEnlace ? enlace.style.background = "#04aa6d" : null;
     });
+}
+
+function oirSonido() {
+    let sonido = document.createElement('audio');
+    sonido.src = "audio/boton.mp3";
+    sonido.play();
 }
