@@ -11,7 +11,7 @@ const informacion = [
         descripcion: "Hay pocas variaciones de los pasajes de Lorem Ipsum disponibles, pero la mayoría sufrió.",
         numeroSerie: "mQ2f7wm 2cPG68X wkaRXbj RWrX3nF",
         estado: "Activo",
-        prioridad: "Baja"
+        prioridad: "Indefinido"
     },
     {
         nombre: "Diseñado de botellas",
@@ -59,12 +59,12 @@ const informacion = [
 
 let informacionNoBorrada = informacion;
 
-window.addEventListener('load', function () {
-    const filtrar = document.getElementById("filtrar");
-    filtrar.value = "";
+window.addEventListener("load", function () {
+    const filtros = filtrar();
+    filtros.value = "";
 
-    filtrar.addEventListener("input", function () {
-        const textoBuscado = filtrar.value;
+    filtros.addEventListener("input", function () {
+        const textoBuscado = filtros.value;
 
         textoBuscado.length >= 3 ? actualizarTabla(textoBuscado) : actualizarTabla("");
     });
@@ -72,9 +72,10 @@ window.addEventListener('load', function () {
     actualizarTabla("");
 });
 
-/*window.onload = function () {
-    
-};*/
+function filtrar() {
+    const inputFiltrar = document.getElementById("filtrar");
+    return inputFiltrar;
+}
 
 function actualizarTabla(filtros) {
     const tabla = document.getElementById("tabla");
@@ -90,20 +91,15 @@ function actualizarTabla(filtros) {
         const nuevoFila = document.createElement("tr");
 
         const celdaAccion = document.createElement("td");
-        const boton = document.createElement("input");
-        boton.type = "button";
-        boton.value = "X";
+        let botonEditar = crearBotonEditar(element);
+        let botonBorrar = crearBotonBorrar(element);
 
-        boton.onclick = function (event) {
-            event.target.parentElement.parentElement.remove();
-            borrarInformacion(element);
-        };
-
-        celdaAccion.appendChild(boton);
+        celdaAccion.appendChild(botonEditar);
+        celdaAccion.appendChild(botonBorrar);
         nuevoFila.appendChild(celdaAccion);
 
         let claves = Object.keys(element);
-        for (let i = 0; i <= claves.length; i++) {
+        for (let i = 0; i <= claves.length - 1; i++) {
             const celda = document.createElement("td");
             celda.textContent = element[claves[i]];
             nuevoFila.appendChild(celda);
@@ -113,9 +109,131 @@ function actualizarTabla(filtros) {
     });
 }
 
-function borrarInformacion(borrar) {
+function crearBotonEditar(registro) {
+    const botonEditar = document.createElement("input");
+    botonEditar.type = "button";
+    botonEditar.value = "EDITAR";
+
+    botonEditar.addEventListener("click", () => modificarInformacion(registro));
+
+    return botonEditar;
+}
+
+function modificarInformacion(registro) {
+    const divFormulario = document.getElementById("formulario");
+    let url = "./htmlPartes/formularioElement.html";
+    fetch(url)
+        .then((response) => response.text())
+        .then(function (text) {
+            console.log(text);
+            console.log(registro);
+            divFormulario.innerHTML = text;
+
+            rellenarDatos(registro);
+            rellenarEstado(registro.estado);
+            rellenarPrioridad(registro.prioridad);
+
+            guardarModificacion(divFormulario, registro);
+            cancelarModificacion(divFormulario);
+        })
+        .catch(function (error) {
+            console.log("Hubo un problema con la petición Fetch: " + error.message);
+        });
+}
+
+function rellenarDatos(registro) {
+    const inputNombre = document.getElementById("nombre");
+    const inputDescripcion = document.getElementById("descripcion");
+    const inputNumeroSerie = document.getElementById("numeroSerie");
+    inputNombre.value = registro.nombre;
+    inputDescripcion.value = registro.descripcion;
+    inputNumeroSerie.value = registro.numeroSerie;
+}
+
+function rellenarEstado(valorEstado) {
+    const inputEstado = document.getElementById("estado");
+    if (valorEstado == inputEstado.value) {
+        inputEstado.checked = true;
+    }
+}
+
+function rellenarPrioridad(valorPrioridad) {
+    const inputPrioridadAlta = document.getElementById("prioridadAlta");
+    const inputPrioridadMedia = document.getElementById("prioridadMedia");
+    const inputPrioridadBaja = document.getElementById("prioridadBaja");
+    valorPrioridad == inputPrioridadAlta.value ? inputPrioridadAlta.checked = true : null;
+    valorPrioridad == inputPrioridadMedia.value ? inputPrioridadMedia.checked = true : null;
+    valorPrioridad == inputPrioridadBaja.value ? inputPrioridadBaja.checked = true : null;
+}
+
+function guardarModificacion(divFormulario, registro) {
+    const inputGuardar = document.getElementById("guardar");
+
+    inputGuardar.addEventListener("click", function () {
+        informacionNoBorrada = informacionNoBorrada.filter(function (element) {
+            if (element === registro) {
+                element = rellenarModificacion(element);
+            }
+            return element;
+        });
+        divFormulario.innerHTML = "";
+        const filtros = filtrar();
+        actualizarTabla(filtros.value);
+    });
+}
+
+function rellenarModificacion(element) {
+    const inputNombre = document.getElementById("nombre");
+    const inputDescripcion = document.getElementById("descripcion");
+    const inputNumeroSerie = document.getElementById("numeroSerie");
+    const inputEstado = document.getElementById("estado");
+    const inputPrioridadAlta = document.getElementById("prioridadAlta");
+    const inputPrioridadMedia = document.getElementById("prioridadMedia");
+    const inputPrioridadBaja = document.getElementById("prioridadBaja");
+
+    let nombre = !(inputNombre.value == "") ? inputNombre.value : element.nombre;
+    let descripcion = !(inputDescripcion.value == "") ? inputDescripcion.value : element.descripcion;
+    let numeroSerie = !(inputNumeroSerie.value == "") ? inputNumeroSerie.value : element.numeroSerie;
+    let estado = inputEstado.checked ? inputEstado.value : "Inactivo";
+
+    let prioridad = "Indefinido";
+    prioridad = inputPrioridadAlta.checked ? inputPrioridadAlta.value : prioridad;
+    prioridad = inputPrioridadMedia.checked ? inputPrioridadMedia.value : prioridad;
+    prioridad = inputPrioridadBaja.checked ? inputPrioridadBaja.value : prioridad;
+
+    element.nombre = nombre;
+    element.descripcion = descripcion;
+    element.numeroSerie = numeroSerie;
+    element.estado = estado;
+    element.prioridad = prioridad;
+
+    return element;
+}
+
+function cancelarModificacion(divFormulario) {
+    const inputCancelar = document.getElementById("cancelar");
+    
+    inputCancelar.addEventListener("click", () => divFormulario.innerHTML = "");
+}
+
+function crearBotonBorrar(registro) {
+    const botonBorrar = document.createElement("input");
+    botonBorrar.type = "button";
+    botonBorrar.value = "X";
+
+    botonBorrar.addEventListener("click", function (event) {
+        event.target.parentElement.parentElement.remove();
+        borrarInformacion(registro);
+    });
+
+    return botonBorrar;
+}
+
+function borrarInformacion(registro) {
     informacionNoBorrada = informacionNoBorrada.filter(function (element) {
         console.log(element);
-        return (!(element == borrar));
+        return (!(element == registro));
     });
+    const divFormulario = document.getElementById("formulario");
+    divFormulario.innerHTML = "";
 }
