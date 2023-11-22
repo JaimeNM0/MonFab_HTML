@@ -57,7 +57,7 @@ const informacion = [
     }
 ];
 
-let informacionNoBorrada = informacion;
+let informacionCambiante = informacion;
 
 window.addEventListener("load", function () {
     const filtros = filtrar();
@@ -81,7 +81,7 @@ function actualizarTabla(filtros) {
     const tabla = document.getElementById("tabla");
     tabla.innerHTML = "";
 
-    const informacionFiltrada = informacionNoBorrada.filter(function (element) {
+    const informacionFiltrada = informacionCambiante.filter(function (element) {
 
         return (element.nombre.toLowerCase().indexOf(filtros.toLowerCase()) != -1 ||
             element.descripcion.toLowerCase().indexOf(filtros.toLowerCase()) != -1 ? true : false);
@@ -125,51 +125,58 @@ function modificarInformacion(registro) {
     fetch(url)
         .then((response) => response.text())
         .then(function (text) {
-            console.log(text);
-            console.log(registro);
-            divFormulario.innerHTML = text;
-
-            rellenarDatos(registro);
-            rellenarEstado(registro.estado);
-            rellenarPrioridad(registro.prioridad);
-
-            guardarModificacion(divFormulario, registro);
-            cancelarModificacion(divFormulario);
+            insertarTextoFormulario(divFormulario, text);
+            rellenarDatosFormulario(registro);
+            guardarFormularioModificar(divFormulario, registro);
+            cancelarFormularioModificar(divFormulario);
         })
         .catch(function (error) {
             console.log("Hubo un problema con la petición Fetch: " + error.message);
         });
 }
 
-function rellenarDatos(registro) {
+function insertarTextoFormulario(divFormulario, text) {
+    const inicio = "<form>";
+    const final = "</form>";
+    let form = text.slice(text.indexOf(inicio), text.indexOf(final) + final.length);
+    divFormulario.innerHTML = form;
+}
+
+function rellenarDatosFormulario(registro) {
     const inputNombre = document.getElementById("nombre");
     const inputDescripcion = document.getElementById("descripcion");
     const inputNumeroSerie = document.getElementById("numeroSerie");
     inputNombre.value = registro.nombre;
     inputDescripcion.value = registro.descripcion;
     inputNumeroSerie.value = registro.numeroSerie;
-}
 
-function rellenarEstado(valorEstado) {
     const inputEstado = document.getElementById("estado");
-    valorEstado == inputEstado.value ? element = inputEstado.checked = true : null;
-}
+    if (registro.estado == inputEstado.value) {
+        inputEstado.checked = true;
+    }
 
-function rellenarPrioridad(valorPrioridad) {
     const inputPrioridadAlta = document.getElementById("prioridadAlta");
     const inputPrioridadMedia = document.getElementById("prioridadMedia");
     const inputPrioridadBaja = document.getElementById("prioridadBaja");
-    valorPrioridad == inputPrioridadAlta.value ? inputPrioridadAlta.checked = true : null;
-    valorPrioridad == inputPrioridadMedia.value ? inputPrioridadMedia.checked = true : null;
-    valorPrioridad == inputPrioridadBaja.value ? inputPrioridadBaja.checked = true : null;
+    if (registro.prioridad == inputPrioridadAlta.value) {
+        inputPrioridadAlta.checked = true;
+    }
+    if (registro.prioridad == inputPrioridadMedia.value) {
+        inputPrioridadMedia.checked = true;
+    }
+    if (registro.prioridad == inputPrioridadBaja.value) {
+        inputPrioridadBaja.checked = true;
+    }
 }
 
-function guardarModificacion(divFormulario, registro) {
+function guardarFormularioModificar(divFormulario, registro) {
     const inputGuardar = document.getElementById("guardar");
 
     inputGuardar.addEventListener("click", function () {
-        informacionNoBorrada = informacionNoBorrada.filter(function (element) {
-            element === registro ? element = rellenarModificacion(element) : null;
+        informacionCambiante = informacionCambiante.filter(function (element) {
+            if (element === registro) {
+                element = rellenarModificacion(element);
+            }
             return element;
         });
         divFormulario.innerHTML = "";
@@ -206,7 +213,7 @@ function rellenarModificacion(element) {
     return element;
 }
 
-function cancelarModificacion(divFormulario) {
+function cancelarFormularioModificar(divFormulario) {
     const inputCancelar = document.getElementById("cancelar");
     inputCancelar.addEventListener("click", () => divFormulario.innerHTML = "");
 }
@@ -225,7 +232,7 @@ function crearBotonBorrar(registro) {
 }
 
 function borrarInformacion(registro) {
-    informacionNoBorrada = informacionNoBorrada.filter(element => element !== registro);
+    informacionCambiante = informacionCambiante.filter(element => element !== registro);
     const divFormulario = document.getElementById("formulario");
     divFormulario.innerHTML = "";
 }

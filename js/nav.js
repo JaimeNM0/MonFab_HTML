@@ -4,7 +4,7 @@ window.addEventListener("load", function () {
     fetch(url)
         .then((response) => response.text())
         .then(function (text) {
-            navbar.innerHTML = text;
+            insertarTextoNav(navbar, text);
             oirSonido();
             remarcarArchivoActual();
         })
@@ -13,6 +13,14 @@ window.addEventListener("load", function () {
         });
 });
 
+function insertarTextoNav(navbar, text) {
+    console.log(text);
+    const inicio = "<nav id=\"listaNav\"";
+    const final = "</nav>";
+    let nav = text.slice(text.indexOf(inicio), text.indexOf(final) + final.length);
+    navbar.innerHTML = nav;
+}
+
 function remarcarArchivoActual() {
     let rutaActual = window.location.pathname;
     let archivoActual = rutaActual.slice(rutaActual.lastIndexOf("/") + 1, rutaActual.indexOf("html") + 4);
@@ -20,7 +28,13 @@ function remarcarArchivoActual() {
 
     enlaces.forEach(function (enlace) {
         let archivoEnlace = enlace.getAttribute("href");
-        archivoActual === archivoEnlace ? enlace.style.background = "#04aa6d" : null;
+        if(archivoActual === "" && archivoEnlace === "index.html") {
+            enlace.style.background = "#04aa6d";
+        }
+
+        if (archivoActual === archivoEnlace) {
+            enlace.style.background = "#04aa6d";
+        }
     });
 }
 
