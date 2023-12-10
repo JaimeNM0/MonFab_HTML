@@ -20,7 +20,7 @@ if (empty($nombre) || empty($descripcion) || empty($nserie)) {
     return;
 }
 
-$element = new Element(null, null, null, null, null);
+$element = new Element($nombre, $descripcion, $nserie, $estado, $prioridad);
 $connection = new DBConnection();
 
 $nserie = $element->UpperLettersFormat($nserie);

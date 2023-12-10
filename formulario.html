@@ -4,8 +4,10 @@
 <head>
     <meta charset="UTF-8">
     <title>Formulario</title>
+    <script type="text/javascript" src="./js/formulario.js"></script>
     <script type="text/javascript" src="./js/nav.js"></script>
     <link rel="stylesheet" type="text/css" href="./css/nav.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 
 <body>
@@ -22,15 +24,15 @@
     </nav>
     <main>
         <h1>Formulario</h1>
-        <form action="../ws/createElement.php" method="POST">
+        <form id="formularioElemento">
             <label for="nombre">Nombre del elemento: </label>
             <input name="nombre" type="text">
             <br>
             <label for="descripcion">Descripción del elemento: </label>
             <input name="descripcion" type="text">
             <br>
-            <label for="numeroSerie">Número de serie del elemento: </label>
-            <input name="numeroSerie" type="text">
+            <label for="nserie">Número de serie del elemento: </label>
+            <input name="nserie" type="text">
             <br>
             <label for="estado">Estado: </label>
             <input name="estado" type="checkbox" value="activo">
@@ -41,9 +43,8 @@
             <input name="prioridad" type="radio" value="baja"> Baja
             <br>
             <br>
-            <button type="submit">Enviar</button>
+            <button id="enviar" type="submit">Enviar</button>
             <button type="reset">Limpiar</button>
-            <button type="submit">Cancelar</button>
         </form>
     </main>
     <footer>
