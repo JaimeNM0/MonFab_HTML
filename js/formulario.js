@@ -8,6 +8,7 @@ function alertaConfirmar() {
     botonEnviar.addEventListener("click", function () {
         const formularioElemento = document.getElementById("formularioElemento");
         const formData = new FormData(formularioElemento);
+        console.log("Hola" + formularioElemento);
         formularioElemento.addEventListener("submit", function (event) {
             event.preventDefault();
             Swal.fire({
