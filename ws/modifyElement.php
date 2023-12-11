@@ -9,8 +9,8 @@ $id = !empty($_GET["id"]) ? $_GET["id"] : null;
 $nombre = !empty($_POST["nombre"]) ? $_POST["nombre"] : null;
 $descripcion = !empty($_POST["descripcion"]) ? $_POST["descripcion"] : null;
 $nserie = !empty($_POST["nserie"]) ? $_POST["nserie"] : null;
-$estado = !empty($_POST["estado"]) ? $_POST["estado"] : null;
-$prioridad = !empty($_POST["prioridad"]) ? $_POST["prioridad"] : null;
+$estado = !empty($_POST["estado"]) ? $_POST["estado"] : "Inactivo";
+$prioridad = !empty($_POST["prioridad"]) ? $_POST["prioridad"] : "Indefinido";
 
 $success = false;
 $message = "ERROR";

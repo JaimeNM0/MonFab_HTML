@@ -27,7 +27,7 @@ function alertaConfirmar() {
                     })
                         .then((response) => response.json())
                         .then(function (response2) {
-                            alertaRespuesta(response2);
+                            alertaRespuesta(response2, "Insertado");
                         })
                         .catch(function (error) {
                             console.log("Hubo un problema con la petición Fetch:" + error.message);
@@ -35,22 +35,5 @@ function alertaConfirmar() {
                 }
             });
         });
-    });
-}
-
-function alertaRespuesta(response2) {
-    let titulo;
-    let texto;
-    let icon;
-    console.log(response2);
-    console.log(response2.success);
-    response2.success ? titulo = "¡Insertado correctamente!" : titulo = "¡Insertado incorrectamente!";
-    response2.success ? texto = response2.message.slice(0, -1) + " el registro " + response2.data[0].id + "." : texto = response2.message;
-    response2.success ? icon = "success" : icon = "error";
-    console.log(titulo);
-    Swal.fire({
-        title: titulo,
-        text: texto,
-        icon: icon
     });
 }

@@ -1,21 +1,33 @@
-
 window.addEventListener("load", function () {
     traerInformacion();
 });
 
-function filtrar() {
-    const inputFiltrar = document.getElementById("filtrar");
-    return inputFiltrar;
+function traerInformacion() {
+    const filtros = document.getElementById("filtrar");
+
+    filtros.addEventListener("input", function () {
+        filtrar(filtros);
+    });
+
+    filtrar(filtros);
 }
 
-function traerInformacion() {
+function filtrar(filtros) {
+    let buscar;
+    const textoBuscado = filtros.value;
+
+    textoBuscado.length >= 3 ? buscar = textoBuscado : buscar = "";
+    peticionBD(buscar);
+}
+
+function peticionBD(buscar) {
     fetch('./ws/getElement.php', {
         method: 'GET'
     })
         .then((response) => response.json())
         .then(function (response2) {
             if (response2.success) {
-                actualizarTabla(response2.data);
+                actualizarTabla(response2.data, buscar);
             }
         })
         .catch(function (error) {
@@ -23,11 +35,20 @@ function traerInformacion() {
         });
 }
 
-function actualizarTabla(data) {
+function actualizarTabla(data, filtros) {
     const tabla = document.getElementById("tabla");
     tabla.innerHTML = "";
+    console.log(data);
+    let datos = data;
+    if (Array.isArray(data)) {
+        datos = data.filter(function (element) {
+            console.log(element.nombre.toLowerCase().indexOf(filtros.toLowerCase()) != -1);
+            return (element.nombre.toLowerCase().indexOf(filtros.toLowerCase()) != -1 ||
+                element.descripcion.toLowerCase().indexOf(filtros.toLowerCase()) != -1 ? true : false);
+        });
+    }
 
-    data.forEach(function (element) {
+    datos.forEach(function (element) {
         const nuevoFila = document.createElement("tr");
 
         const celdaAccion = document.createElement("td");
@@ -132,7 +153,7 @@ function guardarFormularioModificar(registro) {
                 })
                     .then((response) => response.json())
                     .then(function (response2) {
-                        alertaRespuesta(response2);
+                        alertaRespuesta(response2, "Modificado");
                         const divFormulario = document.getElementById("formulario");
                         divFormulario.innerHTML = "";
                         traerInformacion();
@@ -169,7 +190,7 @@ function crearBotonBorrar(registro) {
                 fetch('./ws/deleteElement.php?id=' + registro.id)
                     .then((response) => response.json())
                     .then(function (response2) {
-                        alertaRespuestaBorrar(response2);
+                        alertaRespuesta(response2, "Borrado");
                         traerInformacion();
                     })
                     .catch(function (error) {
@@ -182,38 +203,4 @@ function crearBotonBorrar(registro) {
     });
 
     return botonBorrar;
-}
-
-function alertaRespuesta(response2) {
-    let titulo;
-    let texto;
-    let icon;
-    console.log(response2);
-    console.log(response2.success);
-    response2.success ? titulo = "¡Modificado correctamente!" : titulo = "¡Modificado incorrectamente!";
-    response2.success ? texto = response2.message.slice(0, -1) + " el registro " + response2.data[0].id + "." : texto = response2.message;
-    response2.success ? icon = "success" : icon = "error";
-    console.log(titulo);
-    Swal.fire({
-        title: titulo,
-        text: texto,
-        icon: icon
-    });
-}
-
-function alertaRespuestaBorrar(response2) {
-    let titulo;
-    let texto;
-    let icon;
-    console.log(response2);
-    console.log(response2.success);
-    response2.success ? titulo = "¡Borrado correctamente!" : titulo = "¡Borrado incorrectamente!";
-    texto = response2.message;
-    response2.success ? icon = "success" : icon = "error";
-    console.log(titulo);
-    Swal.fire({
-        title: titulo,
-        text: texto,
-        icon: icon
-    });
 }
