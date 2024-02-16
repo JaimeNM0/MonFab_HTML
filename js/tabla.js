@@ -1,4 +1,12 @@
+module.exports = restar;
+
+function restar(numRestado, numResta) {
+    const resultado = numRestado - numResta;
+    return resultado;
+}
+
 window.addEventListener("load", function () {
+    restar(20, 7);
     traerInformacion();
 });
 
